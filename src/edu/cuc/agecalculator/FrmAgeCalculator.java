@@ -5,6 +5,9 @@
  */
 package edu.cuc.agecalculator;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 /**
  *
  * @author Acer
@@ -161,6 +164,11 @@ public class FrmAgeCalculator extends javax.swing.JFrame {
         );
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         lblErr.setFont(new java.awt.Font("Gill Sans MT", 2, 14)); // NOI18N
         lblErr.setForeground(new java.awt.Color(255, 0, 0));
@@ -213,8 +221,31 @@ public class FrmAgeCalculator extends javax.swing.JFrame {
 
     private void btnCalcularEdadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularEdadActionPerformed
         // Leer los datos de las cajas de texto
+        int dia = Integer.parseInt(txtDia.getText());
+        int mes = Integer.parseInt(txtMes.getText());
+        int annio = Integer.parseInt(txtAnnio.getText());
         
+        // Crear instancia de LocalDate
+        LocalDate nacimiento = LocalDate.of(annio, mes, dia);
+        
+        // Crear instancia de LocalDate actual
+        LocalDate hoy = LocalDate.now();
+        
+        // Calcular la diferencia en annios
+        long edad = ChronoUnit.YEARS.between(nacimiento, hoy);
+        
+        // Mostrar edad en la GUI
+        lblResultado.setText("¡"+edad+" Años!");
     }//GEN-LAST:event_btnCalcularEdadActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // Limpiar todos los campos
+        txtDia.setText(null);
+        txtMes.setText(null);
+        txtAnnio.setText(null);
+        lblResultado.setText(null);
+        lblErr.setText(null);
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     /**
      * @param args the command line arguments
