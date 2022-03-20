@@ -6,6 +6,7 @@
 package edu.cuc.agecalculator;
 
 import edu.cuc.excepciones.*;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
@@ -227,48 +228,102 @@ public class FrmAgeCalculator extends javax.swing.JFrame {
         try {
             // Comprobar que las cajas de texto no esten vacias
             if (txtDia.getText() == null || txtDia.getText().length() == 0) {
-                throw new DatoVacioException("Error: La caja de texto no puede estar vacia");
+                throw new DatoVacioException("La caja de texto no puede estar vacia!");
             }
             if (txtMes.getText() == null || txtMes.getText().length() == 0) {
-                throw new DatoVacioException("Error: La caja de texto no puede estar vacia");
+                throw new DatoVacioException("La caja de texto no puede estar vacia!");
             }
             if (txtAnnio.getText() == null || txtAnnio.getText().length() == 0) {
-                throw new DatoVacioException("Error: La caja de texto no puede estar vacia");
+                throw new DatoVacioException("La caja de texto no puede estar vacia!");
             }
-            
+
             // Leer los datos de las cajas de texto
             int dia = Integer.parseInt(txtDia.getText());
             int mes = Integer.parseInt(txtMes.getText());
             int annio = Integer.parseInt(txtAnnio.getText());
-            
+
             // Comprobar que el annio sea > 1900
             if (annio < 1900) {
-                throw new AnnioIncorrectoException("Error: El año debe ser mayor a 1900");
+                throw new AnnioIncorrectoException("El año debe ser mayor a 1900!");
             }
-            
+
+            // Comprobar que el dia del mes es valido
+            switch (mes) {
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    if (dia > 31) {
+                        throw new DiaIncorrectoException("El valor del dia no puede ser mayor a 31!");
+                    }
+                    break;
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    if (dia > 30) {
+                        throw new DiaIncorrectoException("Para el mes indicado, el valor del dia no puede ser mayor a 30!");
+                    }
+                    break;
+                case 2:
+                    if (esAnnioBisiesto(annio)){
+                        if (dia > 29) {
+                            throw new DiaIncorrectoException("El valor del dia no puede ser mayor a 29!");
+                        }
+                    } else {
+                            throw new DiaIncorrectoException("Para el año indicado, Febrero no cuenta con mas de 28 dias!");
+                    }
+            }
+
             // Crear instancia de LocalDate
             LocalDate nacimiento = LocalDate.of(annio, mes, dia);
-            
+
             // Crear instancia de LocalDate actual
             LocalDate hoy = LocalDate.now();
-            
+
             // Calcular la diferencia en annios
             long edad = ChronoUnit.YEARS.between(nacimiento, hoy);
-            
+
             // Mostrar edad en la GUI
             lblResultado.setText("¡" + edad + " Años!");
-            
+
             // Eliminar mensaje de error
             lblErr.setText(null);
         } catch (NumberFormatException e) {
-            lblErr.setText("Error: Debe ingresar un valor numerico valido");
-        } catch (DatoVacioException | AnnioIncorrectoException ex) {
-            lblErr.setText(ex.getMessage());
+            lblErr.setText("Error: Debe ingresar un valor numerico valido.");
+        } catch (DatoVacioException | AnnioIncorrectoException | DiaIncorrectoException ex) {
+            lblErr.setText("Error: " + ex.getMessage());
             //Logger.getLogger(FrmAgeCalculator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_btnCalcularEdadActionPerformed
 
+    private boolean esAnnioBisiesto(int annio) {
+        boolean bisiesto = false;
+        // Si el annio es divisible entre 4
+        if (annio % 4 == 0) {
+
+            // Si el annio es un siglo
+            if (annio % 100 == 0) {
+
+                // Si el annio es divisible entre 400
+                // Entonces es annio bisiesto
+                if (annio % 400 == 0) {
+                    bisiesto = true;
+                } else {
+                    bisiesto = false;
+                }
+            } // Si el annio no es un siglo
+            else {
+                bisiesto = true;
+            }
+        }
+        return bisiesto;
+    }
+    
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         // Limpiar todos los campos
         txtDia.setText(null);
