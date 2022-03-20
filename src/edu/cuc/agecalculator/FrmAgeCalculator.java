@@ -235,26 +235,38 @@ public class FrmAgeCalculator extends javax.swing.JFrame {
             if (txtAnnio.getText() == null || txtAnnio.getText().length() == 0) {
                 throw new DatoVacioException("Error: La caja de texto no puede estar vacia");
             }
+            
             // Leer los datos de las cajas de texto
             int dia = Integer.parseInt(txtDia.getText());
             int mes = Integer.parseInt(txtMes.getText());
             int annio = Integer.parseInt(txtAnnio.getText());
+            
+            // Comprobar que el annio sea > 1900
+            if (annio < 1900) {
+                throw new AnnioIncorrectoException("Error: El año debe ser mayor a 1900");
+            }
+            
             // Crear instancia de LocalDate
             LocalDate nacimiento = LocalDate.of(annio, mes, dia);
+            
             // Crear instancia de LocalDate actual
             LocalDate hoy = LocalDate.now();
+            
             // Calcular la diferencia en annios
             long edad = ChronoUnit.YEARS.between(nacimiento, hoy);
+            
             // Mostrar edad en la GUI
             lblResultado.setText("¡" + edad + " Años!");
+            
             // Eliminar mensaje de error
             lblErr.setText(null);
         } catch (NumberFormatException e) {
             lblErr.setText("Error: Debe ingresar un valor numerico valido");
-        } catch (DatoVacioException ex) {
+        } catch (DatoVacioException | AnnioIncorrectoException ex) {
             lblErr.setText(ex.getMessage());
             //Logger.getLogger(FrmAgeCalculator.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_btnCalcularEdadActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
