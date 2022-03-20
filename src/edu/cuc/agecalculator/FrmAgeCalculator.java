@@ -242,6 +242,14 @@ public class FrmAgeCalculator extends javax.swing.JFrame {
             int mes = Integer.parseInt(txtMes.getText());
             int annio = Integer.parseInt(txtAnnio.getText());
 
+            // Comprobar que los valores de dia y de mes sean mayores que 0
+            if (dia < 1) {
+                throw new ValorInvalidoException("El valor del dia debe ser mayor a 0");
+            }
+            if (mes < 1) {
+                throw new ValorInvalidoException("El valor del mes debe ser mayor a 0");
+            }
+            
             // Comprobar que el annio sea > 1900
             if (annio < 1900) {
                 throw new AnnioIncorrectoException("El año debe ser mayor a 1900!");
@@ -299,7 +307,7 @@ public class FrmAgeCalculator extends javax.swing.JFrame {
             lblErr.setText(null);
         } catch (NumberFormatException e) {
             lblErr.setText("Error: Debe ingresar un valor numerico valido.");
-        } catch (DatoVacioException | AnnioIncorrectoException | DiaIncorrectoException | MesIncorrectoException ex) {
+        } catch (DatoVacioException | AnnioIncorrectoException | DiaIncorrectoException | MesIncorrectoException | ValorInvalidoException ex) {
             lblErr.setText("Error: " + ex.getMessage());
             //Logger.getLogger(FrmAgeCalculator.class.getName()).log(Level.SEVERE, null, ex);
         }
