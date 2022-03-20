@@ -247,6 +247,11 @@ public class FrmAgeCalculator extends javax.swing.JFrame {
                 throw new AnnioIncorrectoException("El año debe ser mayor a 1900!");
             }
 
+            // Comprobar que el mes suministrado sea valido
+            if (mes > 12) {
+                throw new MesIncorrectoException("El valor del mes debe estar entre 1 y 12");
+            }
+            
             // Comprobar que el dia del mes es valido
             switch (mes) {
                 case 1:
@@ -294,7 +299,7 @@ public class FrmAgeCalculator extends javax.swing.JFrame {
             lblErr.setText(null);
         } catch (NumberFormatException e) {
             lblErr.setText("Error: Debe ingresar un valor numerico valido.");
-        } catch (DatoVacioException | AnnioIncorrectoException | DiaIncorrectoException ex) {
+        } catch (DatoVacioException | AnnioIncorrectoException | DiaIncorrectoException | MesIncorrectoException ex) {
             lblErr.setText("Error: " + ex.getMessage());
             //Logger.getLogger(FrmAgeCalculator.class.getName()).log(Level.SEVERE, null, ex);
         }
